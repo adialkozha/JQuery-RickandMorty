@@ -1,35 +1,37 @@
 'use strict'
 $(function(){
     let modal = $('#modal');
-    let listItem = $('.list-item');
+    let button = $('.load-more')
     let list = [];
     let info = null;
     let closeButton = $('#X');
     let apiLink = 'https://rickandmortyapi.com/api/character/';
-    load();
+    load(apiLink);
     modal.hide();
+
+    button.on('click',function(){
+        load(info.next);
+    })
     $(document).on('click','.list-item',function(){
         let index =$(this).data('index');
-        console.log(this);
         fillModal(index);
         modal.show();
     })
     closeButton.on('click',function () {
         modal.hide();
     })
-    function load() {
+    function load(apiLink) {
         $.get(apiLink,function(data){
             list = [...list,...data.results];
             info = data.info;
             apiLink = info.next;
             fillStats();
             renderList();
-            console.log(apiLink);
         })
     };
     function fillStats(){
-        $('.loaded-char').text(list.length);
-        $('.all-Characters').text(info.count);
+        $('#loaded-char').text(list.length);
+        $('#all-Characters').text(info.count);
         console.log(list.length,info.count)
     }
     function renderList() {
@@ -54,8 +56,19 @@ $(function(){
             console.log(index);
         })
     }
+
     function fillModal(index){
         let char = list[index];
-        console.log(char);
+        $('#Char-name').text(char.name);
+        $('#Char-status').text(char.status);
+        $('#Char-species').text(char.species);
+        $('#Char-gender').text(char.gender);
+        $('#Char-origin').text(char.origin.name);
+        $('#avatar-img').attr("src",`${char.image}`);
+        console.log($("#avatar-img"));
+        
+        console.log();
+        console.log(char.name);
+
     }
 })
